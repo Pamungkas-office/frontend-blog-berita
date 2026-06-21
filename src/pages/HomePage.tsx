@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { blogService } from '../services/user/blog'
 import { PostCard } from '../components/common/PostCard'
+import { AdBanner } from '../components/common/AdBanner'
 import { Loading } from '../components/common/Loading'
 import type { Post } from '../types'
 
@@ -46,6 +47,9 @@ export function HomePage() {
           </div>
         </section>
       )}
+
+      {/* Ad banner after hero */}
+      <AdBanner position="in_article" className="py-4" />
 
       {/* Recent posts */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

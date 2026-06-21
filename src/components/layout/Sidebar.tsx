@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, FileText, FolderTree, Tags, MessageSquare } from "lucide-react";
+import { LayoutDashboard, FileText, FolderTree, Tags, MessageSquare, DollarSign } from "lucide-react";
 import { Button } from "../ui";
 import { authService } from "../../services/auth";
 
@@ -9,6 +9,7 @@ const links = [
   { to: "/admin/category", label: "Categories", icon: FolderTree },
   { to: "/admin/tag", label: "Tags", icon: Tags },
   { to: "/admin/comment", label: "Comments", icon: MessageSquare },
+  { to: "/admin/ads", label: "Iklan", icon: DollarSign },
 ];
 
 

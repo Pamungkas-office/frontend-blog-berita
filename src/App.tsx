@@ -3,6 +3,7 @@ import { HelmetProvider } from 'react-helmet-async'
 import { AuthProvider } from './context/AuthContext'
 import { MainLayout, AdminLayout } from './components/layout'
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
+import { AdsenseHead } from './components/common/AdsenseHead'
 
 // Public pages
 import { HomePage } from './pages/HomePage'
@@ -24,12 +25,14 @@ import { TagIndex } from './pages/admin/tag/TagIndex'
 import { TagCreate } from './pages/admin/tag/TagCreate'
 import { TagEdit } from './pages/admin/tag/TagEdit'
 import { CommentIndex } from './pages/admin/comment/CommentIndex'
+import { AdIndex } from './pages/admin/ad/AdIndex'
 
 function App() {
   return (
     <HelmetProvider>
     <BrowserRouter>
       <AuthProvider>
+        <AdsenseHead />
         <Routes>
           {/* Public routes */}
           <Route element={<MainLayout />}>
@@ -60,6 +63,7 @@ function App() {
               <Route path="tag/create" element={<TagCreate />} />
               <Route path="tag/:id/edit" element={<TagEdit />} />
               <Route path="comment" element={<CommentIndex />} />
+              <Route path="ads" element={<AdIndex />} />
             </Route>
           </Route>
         </Routes>

@@ -3,6 +3,7 @@ import { Search } from 'lucide-react'
 import { blogService } from '../../services/user/blog'
 import { categoryService } from '../../services/user/category'
 import { PostCard } from '../../components/common/PostCard'
+import { AdBanner } from '../../components/common/AdBanner'
 import { Loading } from '../../components/common/Loading'
 import { EmptyState } from '../../components/common/EmptyState'
 import type { Post, Category } from '../../types'
@@ -71,6 +72,8 @@ export function BlogListPage() {
           ))}
         </select>
       </div>
+
+      <AdBanner position="in_article" className="mb-8" />
 
       {filtered.length === 0 ? (
         <EmptyState message="Tidak ada artikel yang ditemukan" />
