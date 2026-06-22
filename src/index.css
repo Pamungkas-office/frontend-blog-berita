@@ -1,6 +1,32 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+@theme {
+  --color-navy-50: #e8eaf0;
+  --color-navy-100: #c5cad9;
+  --color-navy-200: #9ea6bf;
+  --color-navy-300: #7782a5;
+  --color-navy-400: #5a6791;
+  --color-navy-500: #3d4c7d;
+  --color-navy-600: #2a3e6a;
+  --color-navy-700: #1a2b4c;
+  --color-navy-800: #131e36;
+  --color-navy-900: #0c1321;
+
+  --color-brand-red-50: #fde8e8;
+  --color-brand-red-100: #f9c5c5;
+  --color-brand-red-200: #f59e9e;
+  --color-brand-red-300: #f17777;
+  --color-brand-red-400: #ed5a5a;
+  --color-brand-red-500: #e93d3d;
+  --color-brand-red-600: #d92b2b;
+  --color-brand-red-700: #c8102e;
+  --color-brand-red-800: #a30d25;
+  --color-brand-red-900: #7e0a1c;
+
+  --color-bg-light: #f5f6f8;
+}
+
 /* Paksa generate full styles untuk prose, termasuk semua child selector,
    karena konten HTML dari Tiptap di-inject lewat dangerouslySetInnerHTML
    sehingga tidak pernah terdeteksi sebagai "static usage" oleh Tailwind scanner */

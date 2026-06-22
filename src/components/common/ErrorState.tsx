@@ -13,7 +13,7 @@ export function ErrorState({ message = 'Terjadi kesalahan', onRetry }: ErrorStat
       {onRetry && (
         <button
           onClick={onRetry}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
+          className="px-4 py-2 bg-navy-700 text-white rounded-lg text-sm hover:bg-navy-800 transition-colors"
         >
           Coba Lagi
         </button>

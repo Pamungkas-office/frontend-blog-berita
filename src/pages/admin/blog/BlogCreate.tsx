@@ -89,8 +89,11 @@ export function BlogCreate() {
   }
 
   return (
-    <div className="max-w-4xl">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Buat Artikel Baru</h1>
+    <div className="max-w-4xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900">Buat Artikel Baru</h1>
+        <p className="mt-1 text-sm text-gray-500">Isi detail artikel untuk dipublikasikan</p>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {apiError && (
@@ -99,96 +102,100 @@ export function BlogCreate() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            label="Judul Artikel"
-            placeholder="Masukkan judul artikel"
-            error={errors.title?.message}
-            {...register('title', { onChange: handleTitleChange })}
-          />
-          <Input
-            label="Slug"
-            placeholder="auto-generated"
-            error={errors.slug?.message}
-            {...register('slug')}
-          />
-        </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-4 lg:p-6 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+            <Input
+              label="Judul Artikel"
+              placeholder="Masukkan judul artikel"
+              error={errors.title?.message}
+              {...register('title', { onChange: handleTitleChange })}
+            />
+            <Input
+              label="Slug"
+              placeholder="auto-generated"
+              error={errors.slug?.message}
+              {...register('slug')}
+            />
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Select
-            label="Kategori"
-            error={errors.category_id?.message}
-            options={[
-              { value: '', label: '-- Pilih Kategori --' },
-              ...categories.map((c) => ({ value: c.id, label: c.name })),
-            ]}
-            {...register('category_id')}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+            <Select
+              label="Kategori"
+              error={errors.category_id?.message}
+              options={[
+                { value: '', label: '-- Pilih Kategori --' },
+                ...categories.map((c) => ({ value: c.id, label: c.name })),
+              ]}
+              {...register('category_id')}
+            />
+
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-gray-700">Tag</label>
+              <div className="flex flex-wrap gap-2 p-3 border border-gray-300 rounded-lg min-h-[42px]">
+                {tags.length === 0 && (
+                  <span className="text-sm text-gray-400">Tidak ada tag</span>
+                )}
+                {tags.map((tag) => {
+                  const active = selectedTagIds.includes(Number(tag.id))
+                  return (
+                    <button
+                      key={tag.id}
+                      type="button"
+                      onClick={() => toggleTag(Number(tag.id))}
+                      className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
+                        active
+                          ? 'bg-navy-700 text-white border-navy-700'
+                          : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-gray-400'
+                      }`}
+                    >
+                      {tag.name}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+
+          <ImageUpload
+            label="Thumbnail"
+            onChange={setThumbnailFile}
           />
 
-          <div className="space-y-1">
-            <label className="block text-sm font-medium text-gray-700">Tag</label>
-            <div className="flex flex-wrap gap-2 p-3 border border-gray-300 rounded-lg min-h-10.5">
-              {tags.length === 0 && (
-                <span className="text-sm text-gray-400">Tidak ada tag</span>
-              )}
-              {tags.map((tag) => {
-                const active = selectedTagIds.includes(Number(tag.id))
-                return (
-                  <button
-                    key={tag.id}
-                    type="button"
-                    onClick={() => toggleTag(Number(tag.id))}
-                    className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
-                      active
-                        ? 'bg-blue-100 text-blue-700 border-blue-300'
-                        : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    {tag.name}
-                  </button>
-                )
-              })}
+          <div className="space-y-1.5">
+            <label className="block text-sm font-medium text-gray-700">Status</label>
+            <div className="flex gap-6">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  value="draft"
+                  {...register('status')}
+                  className="text-brand-red-700 focus:ring-brand-red-700"
+                />
+                <span className="text-sm text-gray-700">Draft</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  value="published"
+                  {...register('status')}
+                  className="text-brand-red-700 focus:ring-brand-red-700"
+                />
+                <span className="text-sm text-gray-700">Published</span>
+              </label>
             </div>
           </div>
         </div>
 
-        <ImageUpload
-          label="Thumbnail"
-          onChange={setThumbnailFile}
-        />
-
-        <div className="space-y-1">
-          <label className="block text-sm font-medium text-gray-700">Status</label>
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                value="draft"
-                {...register('status')}
-                className="text-blue-600 focus:ring-blue-500"
-              />
-              <span className="text-sm text-gray-700">Draft</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                value="published"
-                {...register('status')}
-                className="text-blue-600 focus:ring-blue-500"
-              />
-              <span className="text-sm text-gray-700">Published</span>
-            </label>
-          </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+          <TiptapEditor
+            label="Konten"
+            value={content}
+            onChange={setContent}
+            error={content.length < 15 ? 'Konten minimal 15 karakter' : undefined}
+          />
         </div>
 
-        <TiptapEditor
-          label="Konten"
-          value={content}
-          onChange={setContent}
-          error={content.length < 15 ? 'Konten minimal 15 karakter' : undefined}
-        />
-
-        <div className="flex gap-3 pt-4">
+        <div className="flex flex-col sm:flex-row gap-3 pt-2">
           <Button type="submit" loading={isSubmitting}>Publikasikan</Button>
           <Button variant="secondary" type="button" onClick={() => navigate('/admin/blog')}>Batal</Button>
         </div>

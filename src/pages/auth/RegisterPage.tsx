@@ -39,13 +39,18 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md p-8">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-          <h1 className="text-2xl font-bold text-center text-gray-900">Daftar</h1>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Buat akun baru
-          </p>
+    <div className="min-h-screen flex items-center justify-center bg-bg-light">
+      <div className="w-full max-w-md p-4 sm:p-8">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
+          <div className="text-center mb-8">
+            {/* <div className="w-12 h-12 rounded-xl bg-navy-700 flex items-center justify-center mx-auto mb-4">
+              <span className="text-white font-bold text-lg">B</span>
+            </div> */}
+            <h1 className="text-2xl font-bold text-navy-700">Daftar</h1>
+            <p className="mt-1 text-sm text-gray-500">
+              Buat akun baru
+            </p>
+          </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
             {apiError && (
@@ -85,7 +90,7 @@ export function RegisterPage() {
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Sudah punya akun?{' '}
-            <Link to="/auth/login" className="text-blue-600 hover:text-blue-700 font-medium">
+            <Link to="/auth/login" className="text-navy-700 hover:text-navy-800 font-medium transition-colors">
               Masuk
             </Link>
           </p>

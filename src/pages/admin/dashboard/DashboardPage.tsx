@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FileText, FolderTree, Tags, Eye } from 'lucide-react'
+import { FileText, FolderTree, Tags, Eye, ChevronRight } from 'lucide-react'
 import { adminBlogService } from '../../../services/admin/blog'
 import { adminCategoryService } from '../../../services/admin/category'
 import { adminTagService } from '../../../services/admin/tag'
 import { Loading } from '../../../components/common/Loading'
 import { formatDate } from '../../../utils/formatDate'
 import type { Post, Category, Tag } from '../../../types'
+
+const statIcons = { FileText, FolderTree, Tags, Eye }
 
 export function DashboardPage() {
   const [posts, setPosts] = useState<Post[]>([])
@@ -32,46 +34,54 @@ export function DashboardPage() {
   if (loading) return <Loading />
 
   const stats = [
-    { label: 'Total Artikel', value: posts.length, icon: FileText, color: 'bg-blue-500' },
-    { label: 'Total Kategori', value: categories.length, icon: FolderTree, color: 'bg-emerald-500' },
-    { label: 'Total Tag', value: tags.length, icon: Tags, color: 'bg-purple-500' },
-    { label: 'Total Pengunjung', value: '-', icon: Eye, color: 'bg-amber-500' },
+    { label: 'Total Artikel', value: posts.length, icon: 'FileText' as const, color: 'from-navy-700 to-navy-600' },
+    { label: 'Total Kategori', value: categories.length, icon: 'FolderTree' as const, color: 'from-brand-red-700 to-brand-red-600' },
+    { label: 'Total Tag', value: tags.length, icon: 'Tags' as const, color: 'from-navy-700 to-navy-600' },
+    { label: 'Total Pengunjung', value: '-', icon: 'Eye' as const, color: 'from-brand-red-700 to-brand-red-600' },
   ]
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Dashboard</h1>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+        <p className="mt-1 text-sm text-gray-500">Ringkasan aktivitas blog Anda</p>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat) => (
-          <div key={stat.label} className="bg-white rounded-xl border border-gray-200 p-6">
-            <div className="flex items-center gap-4">
-              <div className={`${stat.color} p-3 rounded-lg`}>
-                <stat.icon className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">{stat.label}</p>
-                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
+        {stats.map((stat) => {
+          const Icon = statIcons[stat.icon]
+          return (
+            <div key={stat.label} className="bg-white rounded-xl border border-gray-200 p-5 lg:p-6 hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-4">
+                <div className={`bg-gradient-to-br ${stat.color} p-3 rounded-xl shrink-0`}>
+                  <Icon className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs lg:text-sm font-medium text-gray-500 truncate">{stat.label}</p>
+                  <p className="text-xl lg:text-2xl font-bold text-gray-900 mt-0.5">{stat.value}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Artikel Terbaru</h2>
+        <div className="flex items-center justify-between px-4 lg:px-6 py-4 border-b border-gray-200">
+          <h2 className="text-base lg:text-lg font-semibold text-gray-900">Artikel Terbaru</h2>
           <Link
             to="/admin/blog"
-            className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+            className="text-sm font-medium text-brand-red-700 hover:text-brand-red-800 flex items-center gap-1"
           >
-            Lihat Semua
+            Lihat Semua <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
-        <div className="overflow-x-auto">
+
+        {/* Desktop table */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-left text-sm text-gray-500 border-b border-gray-100">
+              <tr className="text-left text-xs text-gray-500 border-b border-gray-100">
                 <th className="px-6 py-3 font-medium">Judul</th>
                 <th className="px-6 py-3 font-medium">Status</th>
                 <th className="px-6 py-3 font-medium">Tanggal</th>
@@ -79,7 +89,7 @@ export function DashboardPage() {
             </thead>
             <tbody>
               {posts.map((post) => (
-                <tr key={post.id} className="border-b border-gray-50 hover:bg-gray-50">
+                <tr key={post.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4">
                     <p className="text-sm font-medium text-gray-900">{post.title}</p>
                   </td>
@@ -94,7 +104,7 @@ export function DashboardPage() {
                       {post.status === 'published' ? 'Published' : 'Draft'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
+                  <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                     {formatDate(post.created_at ?? post.createdAt ?? '') || '-'}
                   </td>
                 </tr>
@@ -108,6 +118,33 @@ export function DashboardPage() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile cards */}
+        <div className="md:hidden divide-y divide-gray-100">
+          {posts.length === 0 ? (
+            <p className="px-4 py-8 text-center text-sm text-gray-500">Belum ada artikel</p>
+          ) : (
+            posts.map((post) => (
+              <div key={post.id} className="px-4 py-4">
+                <p className="text-sm font-medium text-gray-900">{post.title}</p>
+                <div className="flex items-center gap-3 mt-2">
+                  <span
+                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                      post.status === 'published'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                    }`}
+                  >
+                    {post.status === 'published' ? 'Published' : 'Draft'}
+                  </span>
+                  <span className="text-xs text-gray-400">
+                    {formatDate(post.created_at ?? post.createdAt ?? '') || '-'}
+                  </span>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

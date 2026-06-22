@@ -32,7 +32,7 @@ export function ImageUpload({ value, onChange, label, error }: ImageUploadProps)
       <div
         onClick={() => inputRef.current?.click()}
         className={`border-2 border-dashed rounded-lg p-6 cursor-pointer transition-colors text-center ${
-          error ? 'border-red-500' : 'border-gray-300 hover:border-blue-400'
+          error ? 'border-red-500' : 'border-gray-300 hover:border-brand-red-700'
         }`}
       >
         <input

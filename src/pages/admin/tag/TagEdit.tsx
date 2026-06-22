@@ -70,35 +70,40 @@ export function TagEdit() {
   if (loadingData) return <Loading />
 
   return (
-    <div className="max-w-lg">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Edit Tag</h1>
+    <div className="max-w-lg mx-auto">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900">Edit Tag</h1>
+        <p className="mt-1 text-sm text-gray-500">Perbarui nama atau slug tag</p>
+      </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {apiError && (
-          <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
-            {apiError}
+      <div className="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {apiError && (
+            <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
+              {apiError}
+            </div>
+          )}
+
+          <Input
+            label="Nama Tag"
+            placeholder="Masukkan nama tag"
+            error={errors.name?.message}
+            {...register('name')}
+          />
+
+          <Input
+            label="Slug"
+            placeholder="auto-generated"
+            error={errors.slug?.message}
+            {...register('slug')}
+          />
+
+          <div className="flex gap-3 pt-4">
+            <Button type="submit" loading={isSubmitting}>Simpan Perubahan</Button>
+            <Button variant="secondary" type="button" onClick={() => navigate('/admin/tag')}>Batal</Button>
           </div>
-        )}
-
-        <Input
-          label="Nama Tag"
-          placeholder="Masukkan nama tag"
-          error={errors.name?.message}
-          {...register('name')}
-        />
-
-        <Input
-          label="Slug"
-          placeholder="auto-generated"
-          error={errors.slug?.message}
-          {...register('slug')}
-        />
-
-        <div className="flex gap-3 pt-4">
-          <Button type="submit" loading={isSubmitting}>Simpan Perubahan</Button>
-          <Button variant="secondary" type="button" onClick={() => navigate('/admin/tag')}>Batal</Button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   )
 }

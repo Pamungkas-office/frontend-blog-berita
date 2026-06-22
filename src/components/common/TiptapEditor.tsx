@@ -20,7 +20,7 @@ export function TiptapEditor({ value, onChange, label, error }: TiptapEditorProp
     extensions: [
       StarterKit,
       Image.configure({ inline: true, allowBase64: true }),
-      Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-blue-600 underline' } }),
+      Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-brand-red-700 underline' } }),
     ],
     content: (value || '<p></p>') as Content,
     onUpdate: ({ editor }) => {
@@ -62,7 +62,7 @@ export function TiptapEditor({ value, onChange, label, error }: TiptapEditorProp
     <button
       type="button"
       onClick={onClick}
-      className={`p-2 rounded hover:bg-gray-100 transition-colors ${active ? 'bg-blue-100 text-blue-700' : 'text-gray-600'}`}
+      className={`p-2 rounded transition-colors ${active ? 'bg-navy-700 text-white' : 'text-gray-600 hover:bg-bg-light hover:text-navy-700'}`}
     >
       {children}
     </button>
@@ -70,9 +70,9 @@ export function TiptapEditor({ value, onChange, label, error }: TiptapEditorProp
 
   return (
     <div className="space-y-1">
-      {label && <label className="block text-sm font-medium text-gray-700">{label}</label>}
+      {label && <label className="block text-sm font-medium text-navy-700">{label}</label>}
       <div className={`border rounded-lg overflow-hidden ${error ? 'border-red-500' : 'border-gray-300'}`}>
-        <div className="flex flex-wrap items-center gap-0.5 px-2 py-1.5 border-b border-gray-200 bg-gray-50">
+        <div className="flex flex-wrap items-center gap-0.5 px-2 py-1.5 border-b border-gray-200 bg-bg-light">
           <ToolButton onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive('bold')}>
             <Bold className="w-4 h-4" />
           </ToolButton>

@@ -19,8 +19,8 @@ export const authService = {
     return data.data
   },
 
-  async updateProfile(formData: FormData) {
-    const { data } = await api.put<ApiResponse<User>>('/auth/profile', formData)
+  async updateProfile(payload: { name?: string; email?: string }) {
+    const { data } = await api.put<ApiResponse<User>>('/auth/profile', payload)
     return data.data
   },
 
