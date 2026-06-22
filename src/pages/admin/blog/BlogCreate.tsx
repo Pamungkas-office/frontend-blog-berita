@@ -127,7 +127,7 @@ export function BlogCreate() {
 
           <div className="space-y-1">
             <label className="block text-sm font-medium text-gray-700">Tag</label>
-            <div className="flex flex-wrap gap-2 p-3 border border-gray-300 rounded-lg min-h-[42px]">
+            <div className="flex flex-wrap gap-2 p-3 border border-gray-300 rounded-lg min-h-10.5">
               {tags.length === 0 && (
                 <span className="text-sm text-gray-400">Tidak ada tag</span>
               )}

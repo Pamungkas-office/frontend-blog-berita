@@ -1,1 +1,7 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Paksa generate full styles untuk prose, termasuk semua child selector,
+   karena konten HTML dari Tiptap di-inject lewat dangerouslySetInnerHTML
+   sehingga tidak pernah terdeteksi sebagai "static usage" oleh Tailwind scanner */
+@source inline("prose prose-sm prose-lg prose-blue max-w-none");
