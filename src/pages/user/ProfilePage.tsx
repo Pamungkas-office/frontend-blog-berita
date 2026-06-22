@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
@@ -17,6 +18,7 @@ type ProfileForm = z.infer<typeof profileSchema>
 
 export function ProfilePage() {
   const { user, updateUser, logout } = useAuth()
+  const navigate = useNavigate()
   const [apiError, setApiError] = useState('')
   const [success, setSuccess] = useState('')
 
@@ -65,10 +67,6 @@ export function ProfilePage() {
               <span className="text-sm text-gray-500">Email</span>
               <span className="text-sm font-medium text-gray-900">{user?.email}</span>
             </div>
-            {/* <div className="flex items-center justify-between py-3 px-4 bg-bg-light rounded-lg">
-              <span className="text-sm text-gray-500">Role</span>
-              <span className="text-sm font-medium text-gray-900 capitalize">{user?.role ?? '-'}</span>
-            </div> */}
           </div>
         </Card>
 
@@ -108,7 +106,7 @@ export function ProfilePage() {
         </Card>
 
         <div className="flex justify-end">
-          <Button variant="danger" onClick={logout}>
+          <Button variant="danger" onClick={async () => { try { await authService.logout() } catch {} finally { logout(); navigate('/') } }}>
             Logout
           </Button>
         </div>

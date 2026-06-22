@@ -34,7 +34,7 @@ export function DashboardPage() {
   if (loading) return <Loading />
 
   const stats = [
-    { label: 'Total Artikel', value: posts.length, icon: 'FileText' as const, color: 'from-navy-700 to-navy-600' },
+    { label: 'Total Berita', value: posts.length, icon: 'FileText' as const, color: 'from-navy-700 to-navy-600' },
     { label: 'Total Kategori', value: categories.length, icon: 'FolderTree' as const, color: 'from-brand-red-700 to-brand-red-600' },
     { label: 'Total Tag', value: tags.length, icon: 'Tags' as const, color: 'from-navy-700 to-navy-600' },
     { label: 'Total Pengunjung', value: '-', icon: 'Eye' as const, color: 'from-brand-red-700 to-brand-red-600' },
@@ -68,7 +68,7 @@ export function DashboardPage() {
 
       <div className="bg-white rounded-xl border border-gray-200">
         <div className="flex items-center justify-between px-4 lg:px-6 py-4 border-b border-gray-200">
-          <h2 className="text-base lg:text-lg font-semibold text-gray-900">Artikel Terbaru</h2>
+          <h2 className="text-base lg:text-lg font-semibold text-gray-900">Berita Terbaru</h2>
           <Link
             to="/admin/blog"
             className="text-sm font-medium text-brand-red-700 hover:text-brand-red-800 flex items-center gap-1"
@@ -112,7 +112,7 @@ export function DashboardPage() {
               {posts.length === 0 && (
                 <tr>
                   <td colSpan={3} className="px-6 py-8 text-center text-sm text-gray-500">
-                    Belum ada artikel
+                    Belum ada berita
                   </td>
                 </tr>
               )}
@@ -123,7 +123,7 @@ export function DashboardPage() {
         {/* Mobile cards */}
         <div className="md:hidden divide-y divide-gray-100">
           {posts.length === 0 ? (
-            <p className="px-4 py-8 text-center text-sm text-gray-500">Belum ada artikel</p>
+            <p className="px-4 py-8 text-center text-sm text-gray-500">Belum ada berita</p>
           ) : (
             posts.map((post) => (
               <div key={post.id} className="px-4 py-4">

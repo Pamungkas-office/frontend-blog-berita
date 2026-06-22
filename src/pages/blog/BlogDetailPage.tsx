@@ -1,86 +1,100 @@
-import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { Calendar, User, ArrowLeft, MessageSquare, Trash2, Send, Clock, BookOpen } from 'lucide-react'
-import { Helmet } from 'react-helmet-async'
-import { blogService } from '../../services/user/blog'
-import { commentService } from '../../services/user/comment'
-import { PostCard } from '../../components/common/PostCard'
-import { Loading } from '../../components/common/Loading'
-import { Button } from '../../components/ui/Button'
-import { AdBanner } from '../../components/common/AdBanner'
-import { UserSidebar } from '../../components/layout/UserSidebar'
-import { formatDate, formatRelativeDate, truncateText } from '../../utils'
-import { useAuth } from '../../context/AuthContext'
-import type { Post, Comment } from '../../types'
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import {
+  Calendar,
+  User,
+  ArrowLeft,
+  MessageSquare,
+  Trash2,
+  Send,
+  Clock,
+  BookOpen,
+} from "lucide-react";
+import { Helmet } from "react-helmet-async";
+import { blogService } from "../../services/user/blog";
+import { commentService } from "../../services/user/comment";
+import { PostCard } from "../../components/common/PostCard";
+import { Loading } from "../../components/common/Loading";
+import { Button } from "../../components/ui/Button";
+import { AdBanner } from "../../components/common/AdBanner";
+import { UserSidebar } from "../../components/layout/UserSidebar";
+import { formatDate, formatRelativeDate, truncateText } from "../../utils";
+import { useAuth } from "../../context/AuthContext";
+import type { Post, Comment } from "../../types";
 
 export function BlogDetailPage() {
-  const { slug } = useParams()
-  const { user } = useAuth()
-  const [post, setPost] = useState<Post | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [relatedPosts, setRelatedPosts] = useState<Post[]>([])
+  const { slug } = useParams();
+  const { user } = useAuth();
+  const [post, setPost] = useState<Post | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
 
   // Comment state
-  const [comments, setComments] = useState<Comment[]>([])
-  const [commentsLoading, setCommentsLoading] = useState(true)
-  const [commentText, setCommentText] = useState('')
-  const [submitting, setSubmitting] = useState(false)
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [commentsLoading, setCommentsLoading] = useState(true);
+  const [commentText, setCommentText] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!slug) return
+    if (!slug) return;
     blogService
       .getBySlug(slug)
       .then((p) => {
-        setPost(p)
+        setPost(p);
         if (p.category_id) {
-          blogService.getAllPublished({ category: String(p.category_id), limit: 4 }).then((res) => {
-            setRelatedPosts((res.data ?? []).filter((r) => r.slug !== slug))
-          }).catch(() => {})
+          blogService
+            .getAllPublished({ category: String(p.category_id), limit: 4 })
+            .then((res) => {
+              setRelatedPosts((res.data ?? []).filter((r) => r.slug !== slug));
+            })
+            .catch(() => {});
         }
       })
       .catch((err) => {
-        setError(err?.response?.data?.message || 'Artikel tidak ditemukan')
+        setError(err?.response?.data?.message || "Berita tidak ditemukan");
       })
-      .finally(() => setLoading(false))
-  }, [slug])
+      .finally(() => setLoading(false));
+  }, [slug]);
 
   const fetchComments = () => {
-    if (!slug) return
-    setCommentsLoading(true)
+    if (!slug) return;
+    setCommentsLoading(true);
     commentService
       .getByPost(slug)
       .then(setComments)
       .catch(() => {})
-      .finally(() => setCommentsLoading(false))
-  }
+      .finally(() => setCommentsLoading(false));
+  };
 
-  useEffect(() => { fetchComments() }, [slug])
+  useEffect(() => {
+    fetchComments();
+  }, [slug]);
 
   const handleSubmit = async () => {
-    if (!slug || !commentText.trim()) return
-    setSubmitting(true)
+    if (!slug || !commentText.trim()) return;
+    setSubmitting(true);
     try {
-      await commentService.create(slug, commentText.trim())
-      setCommentText('')
-      fetchComments()
+      await commentService.create(slug, commentText.trim());
+      setCommentText("");
+      fetchComments();
     } catch {
       // Silently fail
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }
+  };
 
   const handleDelete = async (commentId: number) => {
     try {
-      await commentService.delete(commentId)
-      setComments((prev) => prev.filter((c) => c.id !== commentId))
+      await commentService.delete(commentId);
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
     } catch {
       // Silently fail
     }
-  }
+  };
 
-  if (loading) return <Loading />
+  if (loading) return <Loading />;
 
   if (error || !post) {
     return (
@@ -88,24 +102,40 @@ export function BlogDetailPage() {
         <div className="w-16 h-16 rounded-2xl bg-bg-light flex items-center justify-center mx-auto mb-6">
           <BookOpen className="w-8 h-8 text-gray-400" />
         </div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-3">Artikel Tidak Ditemukan</h1>
-        <p className="text-gray-500 mb-8">{error || 'Artikel yang Anda cari tidak tersedia atau telah dihapus.'}</p>
-        <Link to="/blog" className="inline-flex items-center gap-2 text-sm font-medium text-brand-red-700 hover:text-brand-red-800 transition-colors">
+        <h1 className="text-2xl font-bold text-gray-900 mb-3">
+          Berita Tidak Ditemukan
+        </h1>
+        <p className="text-gray-500 mb-8">
+          {error || "Berita yang Anda cari tidak tersedia atau telah dihapus."}
+        </p>
+        <Link
+          to="/blog"
+          className="inline-flex items-center gap-2 text-sm font-medium text-brand-red-700 hover:text-brand-red-800 transition-colors"
+        >
           <ArrowLeft className="w-4 h-4" />
           Kembali ke Blog
         </Link>
       </div>
-    )
+    );
   }
 
-  const tags = post.post_tags?.map((pt: any) => pt.tag).filter(Boolean) ?? []
-  const readingTime = Math.max(1, Math.ceil(post.content.replace(/<[^>]*>/g, '').split(/\s+/).length / 200))
+  const tags = post.post_tags?.map((pt: any) => pt.tag).filter(Boolean) ?? [];
+  const readingTime = Math.max(
+    1,
+    Math.ceil(post.content.replace(/<[^>]*>/g, "").split(/\s+/).length / 200),
+  );
 
   return (
     <>
       <Helmet>
         <title>{post.meta_title || post.title} | Blog Berita</title>
-        <meta name="description" content={post.meta_description || truncateText(post.content.replace(/<[^>]*>/g, ''), 160)} />
+        <meta
+          name="description"
+          content={
+            post.meta_description ||
+            truncateText(post.content.replace(/<[^>]*>/g, ""), 160)
+          }
+        />
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
@@ -119,6 +149,11 @@ export function BlogDetailPage() {
               <ArrowLeft className="w-4 h-4" />
               Kembali ke Blog
             </Link>
+
+            {/* Title */}
+            <h1 className="text-3xl md:text-4xl font-bold text-navy-700 leading-tight mb-6">
+              {post.title}
+            </h1>
 
             {/* Thumbnail */}
             {post.thumbnail && (
@@ -140,7 +175,7 @@ export function BlogDetailPage() {
               )}
               <span className="flex items-center gap-1.5 text-sm text-gray-400">
                 <Calendar className="w-4 h-4" />
-                {formatDate(post.created_at ?? post.createdAt ?? '')}
+                {formatDate(post.created_at ?? post.createdAt ?? "")}
               </span>
               {post.author && (
                 <span className="flex items-center gap-1.5 text-sm text-gray-400">
@@ -154,11 +189,6 @@ export function BlogDetailPage() {
               </span>
             </div>
 
-            {/* Title */}
-            <h1 className="text-3xl md:text-4xl font-bold text-navy-700 leading-tight mb-6">
-              {post.title}
-            </h1>
-
             {/* Content (HTML from Tiptap) */}
             <div
               className="prose prose-lg max-w-none prose-headings:text-navy-700 prose-a:text-brand-red-700 mt-8"
@@ -166,7 +196,10 @@ export function BlogDetailPage() {
             />
 
             {/* In-article ad */}
-            <AdBanner position="in_article" className="my-8 py-4 border-y border-gray-100" />
+            <AdBanner
+              position="in_article"
+              className="my-8 py-4 border-y border-gray-100"
+            />
 
             {/* Tags */}
             {tags.length > 0 && (
@@ -194,20 +227,25 @@ export function BlogDetailPage() {
               ) : comments.length === 0 ? (
                 <div className="text-center py-10 bg-bg-light rounded-xl">
                   <MessageSquare className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                  <p className="text-sm text-gray-500">Belum ada komentar. Jadilah yang pertama!</p>
+                  <p className="text-sm text-gray-500">
+                    Belum ada komentar. Jadilah yang pertama!
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {comments.map((comment) => (
-                    <div key={comment.id} className="flex gap-3 p-4 rounded-xl bg-bg-light">
+                    <div
+                      key={comment.id}
+                      className="flex gap-3 p-4 rounded-xl bg-bg-light"
+                    >
                       <div className="w-10 h-10 rounded-full bg-navy-100 flex items-center justify-center text-sm font-semibold text-navy-700 shrink-0">
-                        {comment.user?.name?.charAt(0).toUpperCase() ?? '?'}
+                        {comment.user?.name?.charAt(0).toUpperCase() ?? "?"}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-semibold text-gray-900">
-                              {comment.user?.name ?? 'Anonim'}
+                              {comment.user?.name ?? "Anonim"}
                             </span>
                             <span className="text-xs text-gray-400">
                               {formatRelativeDate(comment.created_at)}
@@ -223,7 +261,9 @@ export function BlogDetailPage() {
                             </button>
                           )}
                         </div>
-                        <p className="mt-1.5 text-sm text-gray-700 leading-relaxed">{comment.comment}</p>
+                        <p className="mt-1.5 text-sm text-gray-700 leading-relaxed">
+                          {comment.comment}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -235,7 +275,7 @@ export function BlogDetailPage() {
                 {user ? (
                   <div className="flex gap-3">
                     <div className="w-10 h-10 rounded-full bg-navy-100 flex items-center justify-center text-sm font-semibold text-navy-700 shrink-0">
-                      {user.name?.charAt(0).toUpperCase() ?? 'U'}
+                      {user.name?.charAt(0).toUpperCase() ?? "U"}
                     </div>
                     <div className="flex-1">
                       <textarea
@@ -260,7 +300,9 @@ export function BlogDetailPage() {
                   </div>
                 ) : (
                   <div className="text-center py-4">
-                    <p className="text-sm text-gray-500 mb-3">Ingin berdiskusi? Silakan login terlebih dahulu.</p>
+                    <p className="text-sm text-gray-500 mb-3">
+                      Ingin berdiskusi? Silakan login terlebih dahulu.
+                    </p>
                     <Link to="/auth/login">
                       <Button size="sm">Login untuk Komentar</Button>
                     </Link>
@@ -272,7 +314,9 @@ export function BlogDetailPage() {
             {/* Related Posts */}
             {relatedPosts.length > 0 && (
               <section className="mt-12 pt-8 border-t border-gray-200">
-                <h2 className="text-xl font-bold text-navy-700 mb-6">Artikel Terkait</h2>
+                <h2 className="text-xl font-bold text-navy-700 mb-6">
+                  Berita Terkait
+                </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {relatedPosts.slice(0, 2).map((rp) => (
                     <PostCard key={rp.id} post={rp} />
@@ -291,5 +335,5 @@ export function BlogDetailPage() {
         </div>
       </div>
     </>
-  )
+  );
 }

@@ -45,19 +45,19 @@ export function BlogIndex() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Artikel</h1>
-          <p className="mt-1 text-sm text-gray-500">Kelola artikel blog</p>
+          <h1 className="text-2xl font-bold text-gray-900">Berita</h1>
+          <p className="mt-1 text-sm text-gray-500">Kelola berita blog</p>
         </div>
         <Link to="/admin/blog/create">
           <Button>
             <Plus className="w-4 h-4 mr-2" />
-            Buat Artikel
+            Buat Berita
           </Button>
         </Link>
       </div>
 
       {posts.length === 0 ? (
-        <EmptyState message="Belum ada artikel" />
+        <EmptyState message="Belum ada berita" />
       ) : (
         <>
           {/* Desktop table */}
@@ -156,9 +156,9 @@ export function BlogIndex() {
         </>
       )}
 
-      <Modal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="Hapus Artikel">
+      <Modal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="Hapus Berita">
         <p className="text-sm text-gray-600 mb-6">
-          Apakah Anda yakin ingin menghapus artikel <strong>{deleteTarget?.title}</strong>? Tindakan ini tidak dapat dibatalkan.
+          Apakah Anda yakin ingin menghapus berita <strong>{deleteTarget?.title}</strong>? Tindakan ini tidak dapat dibatalkan.
         </p>
         <div className="flex justify-end gap-3">
           <Button variant="secondary" onClick={() => setDeleteTarget(null)}>Batal</Button>

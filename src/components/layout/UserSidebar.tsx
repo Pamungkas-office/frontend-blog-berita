@@ -56,7 +56,7 @@ export function UserSidebar() {
             </Link>
           ))}
           {recentPosts.length === 0 && (
-            <p className="text-sm text-gray-400">Belum ada artikel</p>
+            <p className="text-sm text-gray-400">Belum ada berita</p>
           )}
         </div>
       </div>

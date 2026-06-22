@@ -67,7 +67,7 @@ export function HomePage() {
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
           <div className="flex-1 min-w-0">
             {restPosts.length === 0 && posts.length <= 1 ? (
-              <p className="text-center text-gray-500 py-12">Belum ada artikel</p>
+              <p className="text-center text-gray-500 py-12">Belum ada berita</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {restPosts.map((post) => (

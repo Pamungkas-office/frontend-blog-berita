@@ -1,6 +1,7 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { LayoutDashboard, FileText, FolderTree, Tags, MessageSquare, DollarSign, X, LogOut } from "lucide-react";
 import { authService } from "../../services/auth";
+import { useAuth } from "../../context/AuthContext";
 
 const links = [
   { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -17,14 +18,17 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
   const handlerLogout = async () => {
     try {
       await authService.logout();
     } catch (error: any) {
       console.log(error.message);
     } finally {
-      localStorage.removeItem("token");
-      sessionStorage.removeItem("token");
+      logout();
+      navigate("/");
     }
   };
 
@@ -64,7 +68,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       <div className="px-3 py-4 border-t border-gray-100">
         <button
           onClick={handlerLogout}
-          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-700 transition-colors"
+          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-700 transition-colors cursor-pointer"
         >
           <LogOut className="w-5 h-5" />
           Logout

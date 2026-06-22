@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, User } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { Button } from "../ui";
 import { authService } from "../../services/auth";
 
 export function Header() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handlerLogout = async () => {
@@ -15,8 +16,8 @@ export function Header() {
     } catch (error: any) {
       console.log(error.message);
     } finally {
-      localStorage.removeItem("token");
-      sessionStorage.removeItem("token");
+      logout();
+      navigate("/blog");
     }
   };
 

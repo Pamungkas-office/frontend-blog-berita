@@ -65,7 +65,7 @@ export function BlogEdit() {
         setCategories(cats ?? [])
         setTags(tgs ?? [])
       })
-      .catch(() => setApiError('Gagal memuat data artikel'))
+      .catch(() => setApiError('Gagal memuat data berita'))
       .finally(() => setLoadingData(false))
   }, [id, reset])
 
@@ -118,8 +118,8 @@ export function BlogEdit() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Edit Artikel</h1>
-        <p className="mt-1 text-sm text-gray-500">Perbarui detail artikel</p>
+        <h1 className="text-2xl font-bold text-gray-900">Edit Berita</h1>
+        <p className="mt-1 text-sm text-gray-500">Perbarui detail berita</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -132,8 +132,8 @@ export function BlogEdit() {
         <div className="bg-white rounded-xl border border-gray-200 p-4 lg:p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
             <Input
-              label="Judul Artikel"
-              placeholder="Masukkan judul artikel"
+              label="Judul Berita"
+              placeholder="Masukkan judul berita"
               error={errors.title?.message}
               {...register('title', { onChange: handleTitleChange })}
             />

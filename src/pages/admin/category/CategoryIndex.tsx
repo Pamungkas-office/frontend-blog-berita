@@ -47,7 +47,7 @@ export function CategoryIndex() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Kategori</h1>
-          <p className="mt-1 text-sm text-gray-500">Kelola kategori artikel</p>
+          <p className="mt-1 text-sm text-gray-500">Kelola kategori berita</p>
         </div>
         <Link to="/admin/category/create">
           <Button>

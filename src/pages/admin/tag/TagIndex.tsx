@@ -45,7 +45,7 @@ export function TagIndex() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Tag</h1>
-          <p className="mt-1 text-sm text-gray-500">Kelola tag artikel</p>
+          <p className="mt-1 text-sm text-gray-500">Kelola tag berita</p>
         </div>
         <Link to="/admin/tag/create">
           <Button>

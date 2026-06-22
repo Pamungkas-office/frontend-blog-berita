@@ -49,7 +49,7 @@ export function CategoryCreate() {
     <div className="max-w-lg mx-auto">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Tambah Kategori</h1>
-        <p className="mt-1 text-sm text-gray-500">Buat kategori baru untuk artikel</p>
+        <p className="mt-1 text-sm text-gray-500">Buat kategori baru untuk berita</p>
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">

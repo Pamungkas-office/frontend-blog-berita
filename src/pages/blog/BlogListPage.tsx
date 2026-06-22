@@ -49,10 +49,10 @@ export function BlogListPage() {
 
   const pageTitle = categoryName ? `Kategori: ${categoryName}` : search ? `Pencarian: "${search}"` : 'Blog'
   const pageDesc = categoryName
-    ? `Artikel dalam kategori ${categoryName}`
+    ? `Berita dalam kategori ${categoryName}`
     : search
       ? `Hasil pencarian untuk "${search}"`
-      : 'Jelajahi artikel-artikel terbaru'
+      : 'Jelajahi berita-berita terbaru'
 
   const filtered = posts.filter((post) => {
     const matchSearch =
@@ -86,7 +86,7 @@ export function BlogListPage() {
         </div>
         <p className="text-gray-500 mt-1">{pageDesc}</p>
         {filtered.length > 0 && (
-          <p className="text-xs text-gray-400 mt-2">{filtered.length} artikel ditemukan</p>
+          <p className="text-xs text-gray-400 mt-2">{filtered.length} berita ditemukan</p>
         )}
       </div>
 
@@ -96,7 +96,7 @@ export function BlogListPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Cari artikel..."
+            placeholder="Cari berita..."
             value={search}
             onChange={(e) => updateParam('search', e.target.value)}
             className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-red-700 focus:border-transparent"
@@ -150,7 +150,7 @@ export function BlogListPage() {
           {filtered.length === 0 ? (
             <div className="text-center py-16">
               <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 text-sm mb-2">Tidak ada artikel yang ditemukan</p>
+              <p className="text-gray-500 text-sm mb-2">Tidak ada berita yang ditemukan</p>
               <p className="text-gray-400 text-xs">Coba ubah kata kunci atau filter kategori</p>
             </div>
           ) : (
