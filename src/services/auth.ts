@@ -37,4 +37,9 @@ export const authService = {
     const { data } = await api.post<ApiResponse<null>>(ROUTES.RESET_PASSWORD, { token, password })
     return data
   },
+
+  async changePassword(currentPassword: string, newPassword: string) {
+    const { data } = await api.post<ApiResponse<null>>('/auth/change-password', { currentPassword, newPassword })
+    return data
+  },
 }

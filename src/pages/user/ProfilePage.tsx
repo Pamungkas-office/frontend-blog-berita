@@ -9,6 +9,17 @@ import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Card } from '../../components/ui/Card'
 
+const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, 'Password saat ini wajib diisi'),
+  newPassword: z.string().min(8, 'Password baru minimal 8 karakter'),
+  confirmPassword: z.string().min(1, 'Konfirmasi password wajib diisi'),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: 'Konfirmasi password tidak cocok',
+  path: ['confirmPassword'],
+})
+
+type ChangePasswordForm = z.infer<typeof changePasswordSchema>
+
 const profileSchema = z.object({
   name: z.string().min(3, 'Nama minimal 3 karakter'),
   email: z.email('Email tidak valid'),
@@ -21,6 +32,14 @@ export function ProfilePage() {
   const navigate = useNavigate()
   const [apiError, setApiError] = useState('')
   const [success, setSuccess] = useState('')
+
+  // Change password state
+  const [pwApiError, setPwApiError] = useState('')
+  const [pwSuccess, setPwSuccess] = useState('')
+
+  const pwForm = useForm<ChangePasswordForm>({
+    resolver: zodResolver(changePasswordSchema),
+  })
 
   const {
     register,
@@ -100,6 +119,63 @@ export function ProfilePage() {
             <div className="flex gap-3 pt-2">
               <Button type="submit" loading={isSubmitting}>
                 Simpan Perubahan
+              </Button>
+            </div>
+          </form>
+        </Card>
+
+        <Card className="p-5 lg:p-6">
+          <h2 className="text-sm font-semibold text-navy-700 uppercase tracking-wider mb-4">Ubah Password</h2>
+          <form onSubmit={pwForm.handleSubmit(async (formData) => {
+            setPwApiError('')
+            setPwSuccess('')
+            try {
+              await authService.changePassword(formData.currentPassword, formData.newPassword)
+              setPwSuccess('Password berhasil diubah')
+              pwForm.reset()
+            } catch (err: any) {
+              const message = err?.response?.data?.message || err?.message || 'Terjadi kesalahan'
+              setPwApiError(message)
+            }
+          })} className="space-y-4">
+            {pwApiError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
+                {pwApiError}
+              </div>
+            )}
+            {pwSuccess && (
+              <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3">
+                {pwSuccess}
+              </div>
+            )}
+
+            <Input
+              label="Password Saat Ini"
+              type="password"
+              placeholder="Masukkan password saat ini"
+              error={pwForm.formState.errors.currentPassword?.message}
+              {...pwForm.register('currentPassword')}
+            />
+
+            <Input
+              label="Password Baru"
+              type="password"
+              placeholder="Minimal 8 karakter"
+              error={pwForm.formState.errors.newPassword?.message}
+              {...pwForm.register('newPassword')}
+            />
+
+            <Input
+              label="Konfirmasi Password Baru"
+              type="password"
+              placeholder="Ulangi password baru"
+              error={pwForm.formState.errors.confirmPassword?.message}
+              {...pwForm.register('confirmPassword')}
+            />
+
+            <div className="flex gap-3 pt-2">
+              <Button type="submit" loading={pwForm.formState.isSubmitting}>
+                Ubah Password
               </Button>
             </div>
           </form>
