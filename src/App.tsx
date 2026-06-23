@@ -11,6 +11,8 @@ import { BlogListPage } from "./pages/blog/BlogListPage";
 import { BlogDetailPage } from "./pages/blog/BlogDetailPage";
 import { LoginPage } from "./pages/auth/LoginPage";
 import { RegisterPage } from "./pages/auth/RegisterPage";
+import { ForgotPasswordPage } from "./pages/auth/ForgotPasswordPage";
+import { ResetPasswordPage } from "./pages/auth/ResetPasswordPage";
 import { ProfilePage } from "./pages/user/ProfilePage";
 
 // Admin pages
@@ -48,6 +50,8 @@ function App() {
             {/* Auth routes (no layout) */}
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/register" element={<RegisterPage />} />
+            <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
 
             {/* Admin routes (protected + require admin) */}
             <Route element={<ProtectedRoute requireAdmin />}>

@@ -20,5 +20,7 @@ export const ROUTES = {
     TAG_EDIT: (id: string) => `/admin/tag/${id}/edit`,
     COMMENT: '/admin/comment',
   },
-  LOGOUT: '/auth/logout'
+  LOGOUT: '/auth/logout',
+  FORGOT_PASSWORD: '/password/forgot-password',
+  RESET_PASSWORD: '/password/reset-password',
 } as const

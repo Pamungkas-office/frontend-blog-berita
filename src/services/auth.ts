@@ -27,4 +27,14 @@ export const authService = {
   async logout() {
     await api.post(ROUTES.LOGOUT)
   },
+
+  async forgotPassword(email: string) {
+    const { data } = await api.post<ApiResponse<null>>(ROUTES.FORGOT_PASSWORD, { email })
+    return data
+  },
+
+  async resetPassword(token: string, password: string) {
+    const { data } = await api.post<ApiResponse<null>>(ROUTES.RESET_PASSWORD, { token, password })
+    return data
+  },
 }
