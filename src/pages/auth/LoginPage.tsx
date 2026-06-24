@@ -7,6 +7,7 @@ import { authService } from '../../services/auth'
 import { useAuth } from '../../context/AuthContext'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
+import { PasswordInput } from '../../components/ui/PasswordInput'
 
 const loginSchema = z.object({
   email: z.email('Email tidak valid'),
@@ -19,6 +20,9 @@ export function LoginPage() {
   const navigate = useNavigate()
   const { setAuth } = useAuth()
   const [apiError, setApiError] = useState('')
+  const [unverifiedEmail, setUnverifiedEmail] = useState('')
+  const [sendingResend, setSendingResend] = useState(false)
+  const [resendSent, setResendSent] = useState(false)
 
   const {
     register,
@@ -30,13 +34,35 @@ export function LoginPage() {
 
   const onSubmit = async (formData: LoginForm) => {
     setApiError('')
+    setUnverifiedEmail('')
+    setResendSent(false)
     try {
       const result = await authService.login(formData.email, formData.password)
       setAuth(result.user, result.token)
       navigate('/admin/dashboard', { replace: true })
     } catch (err: any) {
-      const message = err?.response?.data?.message || err?.message || 'Terjadi kesalahan'
+      if (err?.response?.status === 403) {
+        setUnverifiedEmail(formData.email)
+        setApiError('Email belum diverifikasi. Silakan cek email Anda atau Kirim Ulang link verifikasi.')
+      } else {
+        const message = err?.response?.data?.message || err?.message || 'Terjadi kesalahan'
+        setApiError(message)
+      }
+    }
+  }
+
+  const handleResend = async () => {
+    if (!unverifiedEmail) return
+    setSendingResend(true)
+    try {
+      await authService.resendVerification(unverifiedEmail)
+      setResendSent(true)
+      setApiError('')
+    } catch (err: any) {
+      const message = err?.response?.data?.message || err?.message || 'Gagal mengirim ulang'
       setApiError(message)
+    } finally {
+      setSendingResend(false)
     }
   }
 
@@ -55,23 +81,37 @@ export function LoginPage() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
-            {apiError && (
+            {apiError && !resendSent && (
               <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
-                {apiError}
+                <p>{apiError}</p>
+                {unverifiedEmail && (
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    disabled={sendingResend}
+                    className="mt-2 text-sm font-medium text-navy-700 hover:text-navy-800 underline disabled:opacity-50"
+                  >
+                    {sendingResend ? 'Mengirim...' : 'Kirim Ulang Verifikasi'}
+                  </button>
+                )}
+              </div>
+            )}
+            {resendSent && (
+              <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3">
+                Link verifikasi telah dikirim ulang. Silakan cek email Anda.
               </div>
             )}
 
             <Input
               label="Email"
               type="email"
-              placeholder="admin@gmail.com"
+              placeholder="user@gmail.com"
               error={errors.email?.message}
               {...register('email')}
             />
 
-            <Input
+            <PasswordInput
               label="Password"
-              type="password"
               placeholder="******"
               error={errors.password?.message}
               {...register('password')}

@@ -32,8 +32,14 @@ export function ForgotPasswordPage() {
       await authService.forgotPassword(formData.email)
       setSuccess(true)
     } catch (err: any) {
-      const message = err?.response?.data?.message || err?.message || 'Terjadi kesalahan'
-      setApiError(message)
+      if (err?.response?.status === 429) {
+        setApiError(
+          'Anda sudah meminta link reset password sebelumnya. Silakan periksa email Anda atau tunggu 30 menit sebelum meminta ulang.',
+        )
+      } else {
+        const message = err?.response?.data?.message || err?.message || 'Terjadi kesalahan'
+        setApiError(message)
+      }
     }
   }
 

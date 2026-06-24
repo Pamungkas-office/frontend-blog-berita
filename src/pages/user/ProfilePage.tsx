@@ -7,6 +7,7 @@ import { useAuth } from '../../context/AuthContext'
 import { authService } from '../../services/auth'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
+import { PasswordInput } from '../../components/ui/PasswordInput'
 import { Card } from '../../components/ui/Card'
 
 const changePasswordSchema = z.object({
@@ -149,25 +150,22 @@ export function ProfilePage() {
               </div>
             )}
 
-            <Input
+            <PasswordInput
               label="Password Saat Ini"
-              type="password"
               placeholder="Masukkan password saat ini"
               error={pwForm.formState.errors.currentPassword?.message}
               {...pwForm.register('currentPassword')}
             />
 
-            <Input
+            <PasswordInput
               label="Password Baru"
-              type="password"
               placeholder="Minimal 8 karakter"
               error={pwForm.formState.errors.newPassword?.message}
               {...pwForm.register('newPassword')}
             />
 
-            <Input
+            <PasswordInput
               label="Konfirmasi Password Baru"
-              type="password"
               placeholder="Ulangi password baru"
               error={pwForm.formState.errors.confirmPassword?.message}
               {...pwForm.register('confirmPassword')}

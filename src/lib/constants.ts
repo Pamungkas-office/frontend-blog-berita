@@ -23,4 +23,6 @@ export const ROUTES = {
   LOGOUT: '/auth/logout',
   FORGOT_PASSWORD: '/password/forgot-password',
   RESET_PASSWORD: '/password/reset-password',
+  VERIFY_EMAIL: '/auth/verify-email',
+  RESEND_VERIFICATION: '/auth/resend-verification',
 } as const

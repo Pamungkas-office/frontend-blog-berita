@@ -42,4 +42,14 @@ export const authService = {
     const { data } = await api.post<ApiResponse<null>>('/auth/change-password', { currentPassword, newPassword })
     return data
   },
+
+  async verifyEmail(token: string) {
+    const { data } = await api.get<ApiResponse<null>>(ROUTES.VERIFY_EMAIL, { params: { token } })
+    return data
+  },
+
+  async resendVerification(email: string) {
+    const { data } = await api.post<ApiResponse<null>>(ROUTES.RESEND_VERIFICATION, { email })
+    return data
+  },
 }

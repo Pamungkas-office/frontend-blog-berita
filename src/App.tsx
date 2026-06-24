@@ -13,6 +13,7 @@ import { LoginPage } from "./pages/auth/LoginPage";
 import { RegisterPage } from "./pages/auth/RegisterPage";
 import { ForgotPasswordPage } from "./pages/auth/ForgotPasswordPage";
 import { ResetPasswordPage } from "./pages/auth/ResetPasswordPage";
+import { VerifyEmailPage } from "./pages/auth/VerifyEmailPage";
 import { ProfilePage } from "./pages/user/ProfilePage";
 
 // Admin pages
@@ -52,6 +53,7 @@ function App() {
             <Route path="/auth/register" element={<RegisterPage />} />
             <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/verify-email" element={<VerifyEmailPage />} />
 
             {/* Admin routes (protected + require admin) */}
             <Route element={<ProtectedRoute requireAdmin />}>

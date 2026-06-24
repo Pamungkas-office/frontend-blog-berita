@@ -6,6 +6,7 @@ import { z } from 'zod/v4'
 import { authService } from '../../services/auth'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
+import { PasswordInput } from '../../components/ui/PasswordInput'
 
 const resetPasswordSchema = z.object({
   password: z.string().min(8, 'Password minimal 8 karakter'),
@@ -113,17 +114,15 @@ export function ResetPasswordPage() {
                 </div>
               )}
 
-              <Input
+              <PasswordInput
                 label="Password Baru"
-                type="password"
                 placeholder="Minimal 8 karakter"
                 error={errors.password?.message}
                 {...register('password')}
               />
 
-              <Input
+              <PasswordInput
                 label="Konfirmasi Password"
-                type="password"
                 placeholder="Ulangi password baru"
                 error={errors.confirmPassword?.message}
                 {...register('confirmPassword')}
