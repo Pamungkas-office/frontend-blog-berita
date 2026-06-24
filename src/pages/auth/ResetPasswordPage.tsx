@@ -5,7 +5,6 @@ import { useSearchParams, Link } from 'react-router-dom'
 import { z } from 'zod/v4'
 import { authService } from '../../services/auth'
 import { Button } from '../../components/ui/Button'
-import { Input } from '../../components/ui/Input'
 import { PasswordInput } from '../../components/ui/PasswordInput'
 
 const resetPasswordSchema = z.object({
