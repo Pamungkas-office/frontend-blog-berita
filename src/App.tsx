@@ -21,6 +21,7 @@ import { DashboardPage } from "./pages/admin/dashboard/DashboardPage";
 import { BlogIndex } from "./pages/admin/blog/BlogIndex";
 import { BlogCreate } from "./pages/admin/blog/BlogCreate";
 import { BlogEdit } from "./pages/admin/blog/BlogEdit";
+import { BlogGenerate } from "./pages/admin/blog/BlogGenerate";
 import { CategoryIndex } from "./pages/admin/category/CategoryIndex";
 import { CategoryCreate } from "./pages/admin/category/CategoryCreate";
 import { CategoryEdit } from "./pages/admin/category/CategoryEdit";
@@ -61,6 +62,7 @@ function App() {
                 <Route path="dashboard" element={<DashboardPage />} />
                 <Route path="blog" element={<BlogIndex />} />
                 <Route path="blog/create" element={<BlogCreate />} />
+                <Route path="blog/generate" element={<BlogGenerate />} />
                 <Route path="blog/:id/edit" element={<BlogEdit />} />
                 <Route path="category" element={<CategoryIndex />} />
                 <Route path="category/create" element={<CategoryCreate />} />

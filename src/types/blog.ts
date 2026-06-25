@@ -40,3 +40,12 @@ export interface Author {
   email?: string
   avatar?: string
 }
+
+export interface GenerateResult {
+  title: string
+  news: string
+  category: string[]
+  tags: string[]
+  meta_title: string | null
+  meta_description: string | null
+}

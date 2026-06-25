@@ -1,11 +1,12 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { LayoutDashboard, FileText, FolderTree, Tags, MessageSquare, DollarSign, X, LogOut } from "lucide-react";
+import { LayoutDashboard, FileText, FolderTree, Tags, MessageSquare, DollarSign, Sparkles, X, LogOut } from "lucide-react";
 import { authService } from "../../services/auth";
 import { useAuth } from "../../context/AuthContext";
 
 const links = [
   { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/admin/blog", label: "Blog Posts", icon: FileText },
+  { to: "/admin/blog/generate", label: "AI Generate", icon: Sparkles },
   { to: "/admin/category", label: "Categories", icon: FolderTree },
   { to: "/admin/tag", label: "Tags", icon: Tags },
   { to: "/admin/comment", label: "Comments", icon: MessageSquare },
@@ -49,7 +50,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           <NavLink
             key={link.to}
             to={link.to}
-            end={link.to === "/admin/dashboard"}
+            end={link.to === "/admin/dashboard" || link.to === "/admin/blog"}
             onClick={onClose}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${

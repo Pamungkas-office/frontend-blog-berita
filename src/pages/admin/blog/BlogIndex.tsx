@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Edit2, Trash2, Calendar, FolderOpen } from 'lucide-react'
+import { Plus, Edit2, Trash2, Calendar, FolderOpen, Sparkles } from 'lucide-react'
 import { adminBlogService } from '../../../services/admin/blog'
 import { Button } from '../../../components/ui/Button'
 import { Modal } from '../../../components/ui/Modal'
@@ -48,12 +48,20 @@ export function BlogIndex() {
           <h1 className="text-2xl font-bold text-gray-900">Berita</h1>
           <p className="mt-1 text-sm text-gray-500">Kelola berita blog</p>
         </div>
-        <Link to="/admin/blog/create">
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            Buat Berita
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link to="/admin/blog/generate">
+            <Button variant="secondary">
+              <Sparkles className="w-4 h-4 mr-2" />
+              AI Generate
+            </Button>
+          </Link>
+          <Link to="/admin/blog/create">
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Buat Berita
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {posts.length === 0 ? (

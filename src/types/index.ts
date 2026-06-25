@@ -1,5 +1,5 @@
 export type { ApiResponse, PaginatedResponse } from './api'
 export type { User } from './user'
-export type { Post, Category, Tag, Author } from './blog'
+export type { Post, Category, Tag, Author, GenerateResult } from './blog'
 export type { Comment } from './comment'
 export type { AdPosition } from './ad'

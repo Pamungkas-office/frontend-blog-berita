@@ -1,5 +1,14 @@
 import api from '../../lib/axios'
-import type { ApiResponse, Post } from '../../types'
+import type { ApiResponse, Post, GenerateResult } from '../../types'
+
+interface SaveGeneratedPayload {
+  title: string
+  news: string
+  category: string[]
+  tags: string[]
+  meta_title?: string | null
+  meta_description?: string | null
+}
 
 export const adminBlogService = {
   async getAll(params?: { page?: number; limit?: number; status?: string }) {
@@ -24,5 +33,15 @@ export const adminBlogService = {
 
   async delete(id: string) {
     await api.delete(`/admin/posts/${id}`)
+  },
+
+  async generate(url: string) {
+    const { data } = await api.post<ApiResponse<GenerateResult>>('/admin/posts/generate', { url })
+    return data.data
+  },
+
+  async saveGenerated(payload: SaveGeneratedPayload) {
+    const { data } = await api.post<ApiResponse<Post>>('/admin/posts/save-generated', payload)
+    return data.data
   },
 }

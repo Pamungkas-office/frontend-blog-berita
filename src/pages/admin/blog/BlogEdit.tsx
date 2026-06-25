@@ -19,6 +19,8 @@ const blogSchema = z.object({
   slug: z.string().min(1, 'Slug wajib diisi'),
   category_id: z.string().min(1, 'Pilih kategori'),
   status: z.enum(['draft', 'published']),
+  meta_title: z.string().optional(),
+  meta_description: z.string().optional(),
 })
 
 type BlogForm = z.infer<typeof blogSchema>
@@ -59,6 +61,8 @@ export function BlogEdit() {
           slug: post.slug,
           category_id: String(post.category_id ?? ''),
           status: post.status,
+          meta_title: post.meta_title ?? '',
+          meta_description: post.meta_description ?? '',
         })
         setContent(post.content)
         setExistingThumbnail(post.thumbnail ?? null)
@@ -103,6 +107,8 @@ export function BlogEdit() {
       fd.append('status', formData.status)
       fd.append('category_id', formData.category_id)
       fd.append('tag_ids', JSON.stringify(selectedTagIds))
+      fd.append('meta_title', formData.meta_title ?? '')
+      fd.append('meta_description', formData.meta_description ?? '')
       if (thumbnailFile) fd.append('thumbnail', thumbnailFile)
 
       await adminBlogService.update(id, fd)
@@ -211,6 +217,21 @@ export function BlogEdit() {
                 <span className="text-sm text-gray-700">Published</span>
               </label>
             </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+            <Input
+              label="Meta Title (SEO)"
+              placeholder="Judul untuk SEO"
+              error={errors.meta_title?.message}
+              {...register('meta_title')}
+            />
+            <Input
+              label="Meta Description (SEO)"
+              placeholder="Deskripsi singkat untuk SEO"
+              error={errors.meta_description?.message}
+              {...register('meta_description')}
+            />
           </div>
         </div>
 
