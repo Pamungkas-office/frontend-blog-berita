@@ -18,6 +18,7 @@ export interface Post {
   created_at?: string
   meta_title?: string
   meta_description?: string
+  view_count?: number
 }
 
 export interface Category {
@@ -48,4 +49,5 @@ export interface GenerateResult {
   tags: string[]
   meta_title: string | null
   meta_description: string | null
+  provider?: string
 }

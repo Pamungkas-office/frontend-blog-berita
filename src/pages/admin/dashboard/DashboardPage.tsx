@@ -4,6 +4,7 @@ import { FileText, FolderTree, Tags, Eye, ChevronRight } from 'lucide-react'
 import { adminBlogService } from '../../../services/admin/blog'
 import { adminCategoryService } from '../../../services/admin/category'
 import { adminTagService } from '../../../services/admin/tag'
+import { adminStatsService } from '../../../services/admin/stats'
 import { Loading } from '../../../components/common/Loading'
 import { formatDate } from '../../../utils/formatDate'
 import type { Post, Category, Tag } from '../../../types'
@@ -14,6 +15,7 @@ export function DashboardPage() {
   const [posts, setPosts] = useState<Post[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [tags, setTags] = useState<Tag[]>([])
+  const [totalViews, setTotalViews] = useState<number>(0)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -21,11 +23,13 @@ export function DashboardPage() {
       adminBlogService.getAll({ limit: 5 }),
       adminCategoryService.getAll(),
       adminTagService.getAll(),
+      adminStatsService.getTotalViews(),
     ])
-      .then(([postsRes, cats, tgs]) => {
+      .then(([postsRes, cats, tgs, views]) => {
         setPosts(postsRes.data ?? [])
         setCategories(cats ?? [])
         setTags(tgs ?? [])
+        setTotalViews(views)
       })
       .catch(() => {})
       .finally(() => setLoading(false))
@@ -37,7 +41,7 @@ export function DashboardPage() {
     { label: 'Total Berita', value: posts.length, icon: 'FileText' as const, color: 'from-navy-700 to-navy-600' },
     { label: 'Total Kategori', value: categories.length, icon: 'FolderTree' as const, color: 'from-brand-red-700 to-brand-red-600' },
     { label: 'Total Tag', value: tags.length, icon: 'Tags' as const, color: 'from-navy-700 to-navy-600' },
-    { label: 'Total Pengunjung', value: '-', icon: 'Eye' as const, color: 'from-brand-red-700 to-brand-red-600' },
+    { label: 'Total Pengunjung', value: totalViews.toLocaleString(), icon: 'Eye' as const, color: 'from-brand-red-700 to-brand-red-600' },
   ]
 
   return (

@@ -42,6 +42,7 @@ export function BlogDetailPage() {
       .getBySlug(slug)
       .then((p) => {
         setPost(p);
+        blogService.recordView(slug).catch(() => {});
         if (p.category_id) {
           blogService
             .getAllPublished({ category: String(p.category_id), limit: 4 })

@@ -12,7 +12,7 @@ export function PostCard({ post }: PostCardProps) {
   return (
     <Link to={`/blog/${post.slug}`} className="group block">
       <article className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200">
-        <div className="aspect-[16/10] bg-bg-light overflow-hidden">
+        <div className="aspect-16/10 bg-bg-light overflow-hidden">
           {post.thumbnail ? (
             <img
               src={post.thumbnail}

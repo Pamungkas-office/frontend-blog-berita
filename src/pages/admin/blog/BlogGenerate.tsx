@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Sparkles, Save, ArrowLeft, Loader2, AlertCircle, CheckCircle } from 'lucide-react'
+import { Sparkles, Save, ArrowLeft, Loader2, AlertCircle, CheckCircle, Zap, Bot } from 'lucide-react'
 import { adminBlogService } from '../../../services/admin/blog'
 import { Button } from '../../../components/ui/Button'
 import type { GenerateResult } from '../../../types'
@@ -130,6 +130,22 @@ export function BlogGenerate() {
                   <h2 className="text-lg font-semibold text-gray-900">
                     {result.title}
                   </h2>
+                  {result.provider && (
+                    <span
+                      className={`shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${
+                        result.provider === 'gemini'
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'bg-emerald-100 text-emerald-700'
+                      }`}
+                    >
+                      {result.provider === 'gemini' ? (
+                        <Bot className="w-3.5 h-3.5" />
+                      ) : (
+                        <Zap className="w-3.5 h-3.5" />
+                      )}
+                      via {result.provider === 'gemini' ? 'Gemini' : 'Groq'}
+                    </span>
+                  )}
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-4">

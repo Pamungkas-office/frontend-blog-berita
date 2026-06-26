@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Edit2, Trash2, Calendar, FolderOpen, Sparkles } from 'lucide-react'
+import { Plus, Edit2, Trash2, Calendar, FolderOpen, Sparkles, Eye } from 'lucide-react'
 import { adminBlogService } from '../../../services/admin/blog'
 import { Button } from '../../../components/ui/Button'
 import { Modal } from '../../../components/ui/Modal'
@@ -75,6 +75,7 @@ export function BlogIndex() {
                 <tr className="text-left text-sm text-gray-500 border-b border-gray-200">
                   <th className="px-6 py-3 font-medium">Judul</th>
                   <th className="px-6 py-3 font-medium">Status</th>
+                  <th className="px-6 py-3 font-medium">Dilihat</th>
                   <th className="px-6 py-3 font-medium">Tanggal</th>
                   <th className="px-6 py-3 font-medium text-right">Aksi</th>
                 </tr>
@@ -97,10 +98,16 @@ export function BlogIndex() {
                         {post.status === 'published' ? 'Published' : 'Draft'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                      {formatDate(post.created_at ?? post.createdAt ?? '') || '-'}
-                    </td>
-                    <td className="px-6 py-4 text-right">
+                      <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                        <span className="flex items-center gap-1">
+                          <Eye className="w-3.5 h-3.5" />
+                          {post.view_count ?? 0}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                        {formatDate(post.created_at ?? post.createdAt ?? '') || '-'}
+                      </td>
+                      <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <Link to={`/admin/blog/${post.id}/edit`}>
                           <Button variant="ghost" size="sm">
@@ -143,10 +150,16 @@ export function BlogIndex() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
-                  <span className="flex items-center gap-1 text-xs text-gray-400">
-                    <Calendar className="w-3 h-3" />
-                    {formatDate(post.created_at ?? post.createdAt ?? '') || '-'}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center gap-1 text-xs text-gray-400">
+                      <Eye className="w-3 h-3" />
+                      {post.view_count ?? 0}
+                    </span>
+                    <span className="flex items-center gap-1 text-xs text-gray-400">
+                      <Calendar className="w-3 h-3" />
+                      {formatDate(post.created_at ?? post.createdAt ?? '') || '-'}
+                    </span>
+                  </div>
                   <div className="flex items-center gap-1">
                     <Link to={`/admin/blog/${post.id}/edit`}>
                       <Button variant="ghost" size="sm">
