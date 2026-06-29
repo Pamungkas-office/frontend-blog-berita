@@ -39,7 +39,11 @@ export function LoginPage() {
     try {
       const result = await authService.login(formData.email, formData.password)
       setAuth(result.user, result.token)
-      navigate('/admin/dashboard', { replace: true })
+      if (result.user.role === 'admin') {
+        navigate('/admin/dashboard', { replace: true })
+      } else {
+        navigate('/', { replace: true })
+      }
     } catch (err: any) {
       if (err?.response?.status === 403) {
         setUnverifiedEmail(formData.email)

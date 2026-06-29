@@ -30,6 +30,7 @@ export function BlogCreate() {
   const [categories, setCategories] = useState<Category[]>([])
   const [tags, setTags] = useState<Tag[]>([])
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([])
+  const [tagsDirty, setTagsDirty] = useState(false)
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
   const [content, setContent] = useState('')
 
@@ -66,6 +67,7 @@ export function BlogCreate() {
   }
 
   const toggleTag = (tagId: number) => {
+    setTagsDirty(true)
     setSelectedTagIds((prev) =>
       prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId],
     )
@@ -79,7 +81,7 @@ export function BlogCreate() {
       fd.append('content', content)
       fd.append('status', formData.status)
       fd.append('category_id', formData.category_id)
-      fd.append('tag_ids', JSON.stringify(selectedTagIds))
+      if (tagsDirty) fd.append('tag_ids', JSON.stringify(selectedTagIds))
       if (thumbnailFile) fd.append('thumbnail', thumbnailFile)
 
       fd.append('meta_title', formData.meta_title ?? '')

@@ -6,7 +6,7 @@ import { Button } from "../ui";
 import { authService } from "../../services/auth";
 
 export function Header() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, authLoading, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -55,8 +55,9 @@ export function Header() {
 
           {/* Desktop right section */}
           <div className="hidden md:flex items-center gap-3">
-
-            {isAuthenticated ? (
+            {authLoading ? (
+              <div className="w-20 h-9 bg-gray-100 rounded-lg animate-pulse" />
+            ) : isAuthenticated ? (
               <div className="flex items-center gap-2">
                 <Link to="/profile">
                   <Button variant="ghost" size="sm">
@@ -111,7 +112,9 @@ export function Header() {
             </nav>
 
             <div className="pt-2 border-t border-gray-100">
-              {isAuthenticated ? (
+              {authLoading ? (
+                <div className="h-10 bg-gray-100 rounded-lg animate-pulse" />
+              ) : isAuthenticated ? (
                 <div className="space-y-2">
                   <Link
                     to="/profile"

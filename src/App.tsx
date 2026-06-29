@@ -3,6 +3,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "./context/AuthContext";
 import { MainLayout, AdminLayout } from "./components/layout";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import { AuthRedirect } from "./components/auth/AuthRedirect";
 import { AdsenseHead } from "./components/common/AdsenseHead";
 
 // Public pages
@@ -40,7 +41,7 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route element={<MainLayout />}>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<AuthRedirect><HomePage /></AuthRedirect>} />
               <Route path="/blog" element={<BlogListPage />} />
               <Route path="/blog/:slug" element={<BlogDetailPage />} />
               {/* Profile — requires login */}
