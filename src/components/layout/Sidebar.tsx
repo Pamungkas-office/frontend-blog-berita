@@ -22,7 +22,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   useEffect(() => {
     if (user?.role === 'super_admin' || user?.is_approver) {
       adminApprovalService.getQueue()
-        .then((q) => setQueueCount(q.length ?? 0))
+        .then((q) => setQueueCount(q.pagination?.total ?? q.data.length ?? 0))
         .catch(() => {});
     }
   }, [user]);
