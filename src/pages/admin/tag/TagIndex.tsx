@@ -6,13 +6,17 @@ import { Button } from '../../../components/ui/Button'
 import { Modal } from '../../../components/ui/Modal'
 import { Loading } from '../../../components/common/Loading'
 import { EmptyState } from '../../../components/common/EmptyState'
+import { Pagination } from '../../../components/common/Pagination'
 import type { Tag } from '../../../types'
+
+const LIMIT = 10
 
 export function TagIndex() {
   const [tags, setTags] = useState<Tag[]>([])
   const [loading, setLoading] = useState(true)
   const [deleteTarget, setDeleteTarget] = useState<Tag | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [page, setPage] = useState(1)
 
   const fetchData = () => {
     setLoading(true)
@@ -24,6 +28,9 @@ export function TagIndex() {
   }
 
   useEffect(() => { fetchData() }, [])
+
+  const totalPages = Math.ceil(tags.length / LIMIT)
+  const displayTags = tags.slice((page - 1) * LIMIT, page * LIMIT)
 
   const handleDelete = async () => {
     if (!deleteTarget) return
@@ -70,7 +77,7 @@ export function TagIndex() {
                 </tr>
               </thead>
               <tbody>
-                {tags.map((tag) => (
+                {displayTags.map((tag) => (
                   <tr key={tag.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">{tag.name}</td>
                     <td className="px-6 py-4 text-sm text-gray-500 font-mono">{tag.slug}</td>
@@ -94,7 +101,7 @@ export function TagIndex() {
 
           {/* Mobile cards */}
           <div className="md:hidden space-y-3">
-            {tags.map((tag) => (
+            {displayTags.map((tag) => (
               <div key={tag.id} className="bg-white rounded-xl border border-gray-200 p-4 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
@@ -118,6 +125,8 @@ export function TagIndex() {
               </div>
             ))}
           </div>
+
+          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
         </>
       )}
 

@@ -6,13 +6,17 @@ import { Button } from '../../../components/ui/Button'
 import { Modal } from '../../../components/ui/Modal'
 import { Loading } from '../../../components/common/Loading'
 import { EmptyState } from '../../../components/common/EmptyState'
+import { Pagination } from '../../../components/common/Pagination'
 import type { Category } from '../../../types'
+
+const LIMIT = 10
 
 export function CategoryIndex() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [deleteTarget, setDeleteTarget] = useState<Category | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [page, setPage] = useState(1)
 
   const fetchData = () => {
     setLoading(true)
@@ -26,6 +30,9 @@ export function CategoryIndex() {
   useEffect(() => {
     fetchData()
   }, [])
+
+  const totalPages = Math.ceil(categories.length / LIMIT)
+  const displayCategories = categories.slice((page - 1) * LIMIT, page * LIMIT)
 
   const handleDelete = async () => {
     if (!deleteTarget) return
@@ -72,7 +79,7 @@ export function CategoryIndex() {
                 </tr>
               </thead>
               <tbody>
-                {categories.map((category) => (
+                {displayCategories.map((category) => (
                   <tr key={category.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">{category.name}</td>
                     <td className="px-6 py-4 text-sm text-gray-500 font-mono">{category.slug}</td>
@@ -96,7 +103,7 @@ export function CategoryIndex() {
 
           {/* Mobile cards */}
           <div className="md:hidden space-y-3">
-            {categories.map((category) => (
+            {displayCategories.map((category) => (
               <div key={category.id} className="bg-white rounded-xl border border-gray-200 p-4 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
@@ -120,6 +127,8 @@ export function CategoryIndex() {
               </div>
             ))}
           </div>
+
+          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
         </>
       )}
 

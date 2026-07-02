@@ -1,6 +1,18 @@
 import api from '../../lib/axios'
 import type { ApiResponse, Post, GenerateResult } from '../../types'
 
+interface PaginationInfo {
+  page: number
+  limit: number
+  total: number
+  totalPages: number
+}
+
+interface PaginatedData<T> {
+  data: T[]
+  pagination: PaginationInfo | null
+}
+
 interface SaveGeneratedPayload {
   title: string
   news: string
@@ -12,7 +24,7 @@ interface SaveGeneratedPayload {
 
 export const adminBlogService = {
   async getAll(params?: { page?: number; limit?: number; status?: string }) {
-    const { data } = await api.get<ApiResponse<Post[]>>('/admin/posts', { params })
+    const { data } = await api.get<ApiResponse<PaginatedData<Post>>>('/admin/posts', { params })
     return data
   },
 

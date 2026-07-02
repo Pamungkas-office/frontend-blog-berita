@@ -4,7 +4,7 @@ export interface Post {
   slug: string
   content: string
   thumbnail?: string | null
-  status: 'draft' | 'published'
+  status: 'draft' | 'waiting_approval' | 'approved' | 'revision' | 'published'
   categoryId?: string
   category_id?: string
   category?: Category
@@ -19,6 +19,38 @@ export interface Post {
   meta_title?: string
   meta_description?: string
   view_count?: number
+  published_at?: string
+  approval_cycle?: number
+  log_approvals?: LogApproval[]
+  total_approvals?: number
+  min_admin_approvals?: number
+}
+
+export interface LogApproval {
+  id: string
+  post_id: string
+  approver_id: string
+  /** 0 = revision, 1 = approved */
+  action: 0 | 1
+  notes?: string | null
+  is_active: boolean
+  created_at: string
+  approver: { id: string; name: string }
+  post?: Pick<Post, 'id' | 'title' | 'slug' | 'status'>
+}
+
+export interface ApprovalConfig {
+  id: string
+  min_admin_approvals: number
+  updated_at?: string
+}
+
+export interface MasterAdminEntry {
+  id: string
+  name: string
+  email: string
+  master_admin_id: string | null
+  is_approver: boolean
 }
 
 export interface Category {

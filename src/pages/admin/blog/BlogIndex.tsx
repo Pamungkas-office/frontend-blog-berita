@@ -1,30 +1,64 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Edit2, Trash2, Calendar, FolderOpen, Sparkles, Eye } from 'lucide-react'
+import { Plus, Edit2, Trash2, Calendar, FolderOpen, Sparkles, Eye, CheckCircle, MessageSquare } from 'lucide-react'
 import { adminBlogService } from '../../../services/admin/blog'
+import { adminApprovalService } from '../../../services/admin/approval'
 import { Button } from '../../../components/ui/Button'
 import { Modal } from '../../../components/ui/Modal'
 import { Loading } from '../../../components/common/Loading'
 import { EmptyState } from '../../../components/common/EmptyState'
+import { StatusBadge } from '../../../components/approval/StatusBadge'
+import { Pagination } from '../../../components/common/Pagination'
 import { formatDate } from '../../../utils/formatDate'
+import { useAuth } from '../../../context/AuthContext'
 import type { Post } from '../../../types'
+
+const LIMIT = 10
+
+type FilterTab = 'all' | 'draft' | 'waiting_approval' | 'approved' | 'revision' | 'published'
+
+const filterTabs: { key: FilterTab; label: string }[] = [
+  { key: 'all', label: 'All' },
+  { key: 'draft', label: 'Draft' },
+  { key: 'waiting_approval', label: 'Waiting' },
+  { key: 'approved', label: 'Approved' },
+  { key: 'revision', label: 'Revision' },
+  { key: 'published', label: 'Published' },
+]
 
 export function BlogIndex() {
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
   const [deleteTarget, setDeleteTarget] = useState<Post | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [activeFilter, setActiveFilter] = useState<FilterTab>('all')
+  const [publishing, setPublishing] = useState<string | null>(null)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const { user } = useAuth()
+
+  const isSuperAdmin = user?.role === 'super_admin'
 
   const fetchData = () => {
     setLoading(true)
+    const params: { page: number; limit: number; status?: string } = { page, limit: LIMIT }
+    if (activeFilter !== 'all') params.status = activeFilter
     adminBlogService
-      .getAll()
-      .then((res) => setPosts(res.data ?? []))
+      .getAll(params)
+      .then((res) => {
+        setPosts(res.data.data ?? [])
+        setTotalPages(res.data.pagination?.totalPages ?? 1)
+      })
       .catch(() => {})
       .finally(() => setLoading(false))
   }
 
-  useEffect(() => { fetchData() }, [])
+  useEffect(() => { fetchData() }, [page, activeFilter])
+
+  const handleFilterChange = (tab: FilterTab) => {
+    setActiveFilter(tab)
+    setPage(1)
+  }
 
   const handleDelete = async () => {
     if (!deleteTarget) return
@@ -36,6 +70,17 @@ export function BlogIndex() {
     } catch {
     } finally {
       setDeleting(false)
+    }
+  }
+
+  const handlePublish = async (postId: string) => {
+    setPublishing(postId)
+    try {
+      await adminApprovalService.publish(postId)
+      fetchData()
+    } catch {
+    } finally {
+      setPublishing(null)
     }
   }
 
@@ -64,6 +109,23 @@ export function BlogIndex() {
         </div>
       </div>
 
+      {/* Filter tabs */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        {filterTabs.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => handleFilterChange(tab.key)}
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+              activeFilter === tab.key
+                ? 'bg-navy-700 text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
       {posts.length === 0 ? (
         <EmptyState message="Belum ada berita" />
       ) : (
@@ -88,31 +150,43 @@ export function BlogIndex() {
                       <p className="text-xs text-gray-500 mt-0.5">{post.category?.name ?? '-'}</p>
                     </td>
                     <td className="px-6 py-4">
-                      <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          post.status === 'published'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}
-                      >
-                        {post.status === 'published' ? 'Published' : 'Draft'}
+                      <StatusBadge status={post.status} />
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                      <span className="flex items-center gap-1">
+                        <Eye className="w-3.5 h-3.5" />
+                        {post.view_count ?? 0}
                       </span>
                     </td>
-                      <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                        <span className="flex items-center gap-1">
-                          <Eye className="w-3.5 h-3.5" />
-                          {post.view_count ?? 0}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                        {formatDate(post.created_at ?? post.createdAt ?? '') || '-'}
-                      </td>
-                      <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                      {formatDate(post.created_at ?? post.createdAt ?? '') || '-'}
+                    </td>
+                    <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Link to={`/admin/blog/${post.id}/edit`}>
-                          <Button variant="ghost" size="sm">
-                            <Edit2 className="w-4 h-4" />
+                        {/* Publish button for super_admin on approved posts */}
+                        {isSuperAdmin && post.status === 'approved' && (
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            loading={publishing === post.id}
+                            onClick={() => handlePublish(post.id)}
+                          >
+                            <CheckCircle className="w-4 h-4 mr-1" />
+                            Publish
                           </Button>
+                        )}
+                        <Link to={`/admin/blog/${post.id}/edit`}>
+                          {post.status === 'revision' ? (
+                            <Button variant="ghost" size="sm">
+                              <MessageSquare className="w-4 h-4 mr-1" />
+                              <span className="hidden lg:inline">Edit & Lihat Revisi</span>
+                              <span className="lg:hidden">Revisi</span>
+                            </Button>
+                          ) : (
+                            <Button variant="ghost" size="sm">
+                              <Edit2 className="w-4 h-4" />
+                            </Button>
+                          )}
                         </Link>
                         <Button variant="ghost" size="sm" onClick={() => setDeleteTarget(post)}>
                           <Trash2 className="w-4 h-4 text-red-500" />
@@ -139,15 +213,7 @@ export function BlogIndex() {
                       </span>
                     )}
                   </div>
-                  <span
-                    className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                      post.status === 'published'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}
-                  >
-                    {post.status === 'published' ? 'Published' : 'Draft'}
-                  </span>
+                  <StatusBadge status={post.status} />
                 </div>
                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
                   <div className="flex items-center gap-3">
@@ -161,10 +227,26 @@ export function BlogIndex() {
                     </span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Link to={`/admin/blog/${post.id}/edit`}>
-                      <Button variant="ghost" size="sm">
-                        <Edit2 className="w-4 h-4" />
+                    {isSuperAdmin && post.status === 'approved' && (
+                      <Button
+                        size="sm"
+                        loading={publishing === post.id}
+                        onClick={() => handlePublish(post.id)}
+                      >
+                        Publish
                       </Button>
+                    )}
+                    <Link to={`/admin/blog/${post.id}/edit`}>
+                      {post.status === 'revision' ? (
+                        <Button variant="ghost" size="sm">
+                          <MessageSquare className="w-4 h-4 mr-1" />
+                          Revisi
+                        </Button>
+                      ) : (
+                        <Button variant="ghost" size="sm">
+                          <Edit2 className="w-4 h-4" />
+                        </Button>
+                      )}
                     </Link>
                     <Button variant="ghost" size="sm" onClick={() => setDeleteTarget(post)}>
                       <Trash2 className="w-4 h-4 text-red-500" />
@@ -174,6 +256,8 @@ export function BlogIndex() {
               </div>
             ))}
           </div>
+
+          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
         </>
       )}
 

@@ -4,10 +4,10 @@ import { FileText, FolderTree, Tags, Eye, ChevronRight } from 'lucide-react'
 import { adminBlogService } from '../../../services/admin/blog'
 import { adminCategoryService } from '../../../services/admin/category'
 import { adminTagService } from '../../../services/admin/tag'
-import { adminStatsService } from '../../../services/admin/stats'
 import { Loading } from '../../../components/common/Loading'
 import { formatDate } from '../../../utils/formatDate'
 import type { Post, Category, Tag } from '../../../types'
+import { formatStatus } from '../../../utils/formatStatus'
 
 const statIcons = { FileText, FolderTree, Tags, Eye }
 
@@ -15,7 +15,6 @@ export function DashboardPage() {
   const [posts, setPosts] = useState<Post[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [tags, setTags] = useState<Tag[]>([])
-  const [totalViews, setTotalViews] = useState<number>(0)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -23,13 +22,11 @@ export function DashboardPage() {
       adminBlogService.getAll({ limit: 5 }),
       adminCategoryService.getAll(),
       adminTagService.getAll(),
-      adminStatsService.getTotalViews(),
     ])
-      .then(([postsRes, cats, tgs, views]) => {
-        setPosts(postsRes.data ?? [])
+      .then(([postsRes, cats, tgs]) => {
+        setPosts(postsRes.data.data ?? [])
         setCategories(cats ?? [])
         setTags(tgs ?? [])
-        setTotalViews(views)
       })
       .catch(() => {})
       .finally(() => setLoading(false))
@@ -41,7 +38,7 @@ export function DashboardPage() {
     { label: 'Total Berita', value: posts.length, icon: 'FileText' as const, color: 'from-navy-700 to-navy-600' },
     { label: 'Total Kategori', value: categories.length, icon: 'FolderTree' as const, color: 'from-brand-red-700 to-brand-red-600' },
     { label: 'Total Tag', value: tags.length, icon: 'Tags' as const, color: 'from-navy-700 to-navy-600' },
-    { label: 'Total Pengunjung', value: totalViews.toLocaleString(), icon: 'Eye' as const, color: 'from-brand-red-700 to-brand-red-600' },
+    // { label: 'Total Pengunjung', value: totalViews.toLocaleString(), icon: 'Eye' as const, color: 'from-brand-red-700 to-brand-red-600' },
   ]
 
   return (
@@ -51,13 +48,13 @@ export function DashboardPage() {
         <p className="mt-1 text-sm text-gray-500">Ringkasan aktivitas blog Anda</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-4 lg:gap-6 mb-8">
         {stats.map((stat) => {
           const Icon = statIcons[stat.icon]
           return (
             <div key={stat.label} className="bg-white rounded-xl border border-gray-200 p-5 lg:p-6 hover:shadow-md transition-shadow">
               <div className="flex items-center gap-4">
-                <div className={`bg-gradient-to-br ${stat.color} p-3 rounded-xl shrink-0`}>
+                <div className={`bg-linear-to-br ${stat.color} p-3 rounded-xl shrink-0`}>
                   <Icon className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
                 </div>
                 <div className="min-w-0">
@@ -105,7 +102,7 @@ export function DashboardPage() {
                           : 'bg-yellow-100 text-yellow-800'
                       }`}
                     >
-                      {post.status === 'published' ? 'Published' : 'Draft'}
+                      {formatStatus(post.status)}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">

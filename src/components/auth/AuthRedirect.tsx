@@ -17,7 +17,7 @@ export function AuthRedirect({ children }: AuthRedirectProps) {
     )
   }
 
-  if (isAuthenticated && user?.role === 'admin') {
+  if (isAuthenticated && (user?.role === 'admin' || user?.role === 'super_admin')) {
     return <Navigate to="/admin/dashboard" replace />
   }
 

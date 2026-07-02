@@ -17,7 +17,7 @@ import { ResetPasswordPage } from "./pages/auth/ResetPasswordPage";
 import { VerifyEmailPage } from "./pages/auth/VerifyEmailPage";
 import { ProfilePage } from "./pages/user/ProfilePage";
 
-// Admin pages
+// Admin pages (content management)
 import { DashboardPage } from "./pages/admin/dashboard/DashboardPage";
 import { BlogIndex } from "./pages/admin/blog/BlogIndex";
 import { BlogCreate } from "./pages/admin/blog/BlogCreate";
@@ -31,6 +31,17 @@ import { TagCreate } from "./pages/admin/tag/TagCreate";
 import { TagEdit } from "./pages/admin/tag/TagEdit";
 import { CommentIndex } from "./pages/admin/comment/CommentIndex";
 import { AdIndex } from "./pages/admin/ad/AdIndex";
+import { ApprovalQueuePage as AdminApprovalQueue } from "./pages/admin/approval/ApprovalQueuePage";
+import { ApprovalHistoryPage as AdminApprovalHistory } from "./pages/admin/approval/ApprovalHistoryPage";
+import { ApprovalBlogEdit as AdminApprovalBlogEdit } from "./pages/admin/approval/ApprovalBlogEdit";
+
+// Super admin pages (oversight)
+import { DashboardPage as SuperDashboard } from "./pages/super_admin/dashboard/DashboardPage";
+import { UserManagementPage } from "./pages/super_admin/users/UserManagementPage";
+import { ApprovalQueuePage } from "./pages/super_admin/approval/ApprovalQueuePage";
+import { ApprovalHistoryPage } from "./pages/super_admin/approval/ApprovalHistoryPage";
+import { ApprovalConfigPage } from "./pages/super_admin/approval/ApprovalConfigPage";
+import { ApprovalBlogEdit as SuperAdminApprovalBlogEdit } from "./pages/super_admin/approval/ApprovalBlogEdit";
 
 function App() {
   return (
@@ -57,7 +68,7 @@ function App() {
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/verify-email" element={<VerifyEmailPage />} />
 
-            {/* Admin routes (protected + require admin) */}
+            {/* Admin routes — content management (admin + super_admin) */}
             <Route element={<ProtectedRoute requireAdmin />}>
               <Route path="/admin" element={<AdminLayout />}>
                 <Route path="dashboard" element={<DashboardPage />} />
@@ -73,6 +84,21 @@ function App() {
                 <Route path="tag/:id/edit" element={<TagEdit />} />
                 <Route path="comment" element={<CommentIndex />} />
                 <Route path="ads" element={<AdIndex />} />
+                <Route path="approval-queue" element={<AdminApprovalQueue />} />
+                <Route path="approval-queue/:id/edit" element={<AdminApprovalBlogEdit />} />
+                <Route path="approval-history" element={<AdminApprovalHistory />} />
+              </Route>
+            </Route>
+
+            {/* Super admin routes — oversight (super_admin only) */}
+            <Route element={<ProtectedRoute requireSuperAdmin />}>
+              <Route path="/super-admin" element={<AdminLayout />}>
+                <Route path="dashboard" element={<SuperDashboard />} />
+                <Route path="users" element={<UserManagementPage />} />
+                <Route path="approval-queue" element={<ApprovalQueuePage />} />
+                <Route path="approval-queue/:id/edit" element={<SuperAdminApprovalBlogEdit />} />
+                <Route path="approval-history" element={<ApprovalHistoryPage />} />
+                <Route path="approval-config" element={<ApprovalConfigPage />} />
               </Route>
             </Route>
           </Routes>

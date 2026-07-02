@@ -4,9 +4,10 @@ import { Loading } from '../common/Loading'
 
 interface ProtectedRouteProps {
   requireAdmin?: boolean
+  requireSuperAdmin?: boolean
 }
 
-export function ProtectedRoute({ requireAdmin }: ProtectedRouteProps) {
+export function ProtectedRoute({ requireAdmin, requireSuperAdmin }: ProtectedRouteProps) {
   const { isAuthenticated, authLoading, user } = useAuth()
 
   if (authLoading) {
@@ -21,7 +22,11 @@ export function ProtectedRoute({ requireAdmin }: ProtectedRouteProps) {
     return <Navigate to="/auth/login" replace />
   }
 
-  if (requireAdmin && user?.role !== 'admin') {
+  if (requireSuperAdmin && user?.role !== 'super_admin') {
+    return <Navigate to="/" replace />
+  }
+
+  if (requireAdmin && user?.role !== 'admin' && user?.role !== 'super_admin') {
     return <Navigate to="/" replace />
   }
 
